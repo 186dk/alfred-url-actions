@@ -1,6 +1,6 @@
 [
   {
-    "action_title": "Url without https://wwww or http://www",
+    "action_title": "Url without https://www or http://www",
     "output": "{stripped_url}"
   },
   {
