@@ -48,10 +48,14 @@ def get_title(app_name):
 def clean_url(url):
     return re.sub(r'(^.*/(?:dp|gp/product)/([^/?]+)).*$', r'\1', url)
 
+def stripped_url_func(url):
+    return re.sub(r'https://www\.|http://www\.|https://www|http://|https://|www\.', "", url).strip('/')
+
 
 def main(wf):
     app_name = get_app_name()
     title = wf.decode(get_title(app_name))
+    stripped_url = ''
     url = wf.decode(wf.args[0]) if len(wf.args) else None
     if os.environ.get('CLEAN_AMAZON') == 'true':
         url = clean_url(url)
@@ -68,8 +72,9 @@ def main(wf):
             formatted_title = urllib.quote(title.encode('utf-8'))
         else:
             formatted_title = title
+        stripped_url = stripped_url_func(url)
         formatted = action['output'].format(
-            title=formatted_title, url=url)
+            title=formatted_title, url=url, stripped_url=stripped_url)
         # use the formatted string as subtitle if it's not specified in the json
         subtitle = action.get('action_subtitle', formatted)
         wf.add_item(title=action['action_title'],
